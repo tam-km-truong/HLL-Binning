@@ -10,6 +10,12 @@ HyperLogLog-based first-fit bin packing for genomes
 
 ## Guide
 
+RUN WITH:
+
+```
+snakemake
+```
+
 ### Step 1: 
 Sketch Genomes and move all .hll files into tmp/sketches/.
 
