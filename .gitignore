@@ -1,1 +1,6 @@
 .snakemake/
+input/*
+output/*
+tmp/completion/*
+tmp/sketches/*
+tmp/bins/*

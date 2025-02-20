@@ -1,6 +1,7 @@
 import subprocess
 import os
 import glob
+import sys
 
 def get_cardinality(sketch):
     """
@@ -120,10 +121,21 @@ def firstfit_hyperloglog(bin_capacity, sketches_dir="tmp/sketches", bin_dir="tmp
 
 
 if __name__ == "__main__":
+    
+    sketches_dir = "tmp/sketches"
+    bin_dir = "tmp/bins"
+    bin_capacity = float(sys.argv[1])
+    file_name = sys.argv[2]
 
-    bin_capacity = 15000000  # Example bin capacity
+    bins, cardinalities = firstfit_hyperloglog(bin_capacity, sketches_dir, bin_dir)
 
-    bins,bin_cards = firstfit_hyperloglog(bin_capacity)
+    # Ensure output directory exists
+    os.makedirs("output", exist_ok=True)
 
-    for i, bin in enumerate(bins):
-        print(f"Bin {i + 1}: {bin}",bin_cards[i])
+    # Save bin assignments to output/bin_assignment.txt
+    with open(f'output/{file_name}_bin_assignment.txt', "w") as f:
+        for i, (bin_content, bin_card) in enumerate(zip(bins, cardinalities)):
+            f.write(f"Bin {i}: {', '.join(bin_content)}; Cardinality: {bin_card}\n")
+
+    # Create completion marker
+    open(f'tmp/completion/{file_name}_binned.done', "w").close()

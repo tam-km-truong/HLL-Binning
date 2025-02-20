@@ -1,8 +1,7 @@
 # Rule all that collects the final output to trigger all steps
 rule all:
     input:
-        expand("tmp/completion/{genomes_file}_hll_moved.done", genomes_file=glob_wildcards("input/{genomes_file}.txt").genomes_file)
-
+        expand("tmp/completion/{genomes_file}_binned.done", genomes_file=glob_wildcards("input/{genomes_file}.txt").genomes_file)
 
 # Rule to sketch genomes and create sketches
 rule sketch_genomes:
@@ -45,3 +44,15 @@ rule move_hll_files:
         touch {output.completion_marker}
         """
 
+# Rule to bin the HLL sketches using First-Fit HyperLogLog
+rule bin_hll_sketches:
+    input:
+        sketches_dir="tmp/sketches",
+        hll_moved="tmp/completion/{genomes_file}_hll_moved.done"
+    output:
+        bin_assignment="output/{genomes_file}_bin_assignment.txt",  # Wildcard included
+        completion_marker="tmp/completion/{genomes_file}_binned.done"  # Matching wildcard
+    params:
+        bin_capacity=2e7  # Adjust as needed
+    shell:
+        "python scripts/first_fit_hyperloglog.py {params.bin_capacity} {wildcards.genomes_file}"
