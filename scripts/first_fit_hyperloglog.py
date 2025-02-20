@@ -19,7 +19,8 @@ def union_sketch(bin_sketch, genome_sketch, output_sketch):
     """
     Compute the union of two HLL sketches and save it as a new sketch.
     """
-    subprocess.run(["dashing", "union", "-o", output_sketch, bin_sketch, genome_sketch], check=True)
+    subprocess.run(["dashing", "union", "-o", output_sketch, bin_sketch, genome_sketch],
+                    check=True, stdout=subprocess.DEVNULL)
 
 
 def extract_genome_name(filepath):
@@ -80,6 +81,7 @@ def firstfit_hyperloglog(bin_capacity, sketches_dir="tmp/sketches", bin_dir="tmp
     for genome_sketch in genome_sketches[1:]:
         genome_name = extract_genome_name(genome_sketch)
         placed = False
+        print('Binning', genome_name)
 
         # Try placing in an existing bin
         for i, bin_path in enumerate(bin_paths):
