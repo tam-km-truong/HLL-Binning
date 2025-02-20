@@ -10,6 +10,11 @@ HyperLogLog-based first-fit bin packing for genomes
 
 ## Guide
 
+Input can be created using :
+```
+find ~/dir_with_my_genomes -name '*.fa.gz' > input/my_genomes.txt
+```
+
 RUN WITH:
 
 ```
